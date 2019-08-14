@@ -1,6 +1,6 @@
 # ClustreamProject
 ## A algorithm of cluster theory.
-## High light
+## Highlight
 * reduce dimension by PCA
 * datasets: Mfeat(handwritting number)...
 * 
