@@ -8,49 +8,6 @@ root = './datasets'
 assert os.path.isdir(root), "not found datasets in path: {}".format(root)
 
 
-def transformer_bbcsport_2():
-    '''
-    对bbcsport 2 view 数据集的loader & 转换
-    :param data: data['X'].shape = (dims, simple nums), data['gt'].shape = (1, simple nums)
-    :return:    S1_X    训练集 X，X是多个视图的stack，    S1_X.shape = (simple_nums, dims_total)
-                S1_Y    训练集 label ，                 S1_Y.shape = (simple_nums, 1)
-                S2_X    测试集 X
-                S2_Y    测试集 label
-                totalnum = round((raw.shape[0]) / 2)  # train len
-    '''
-
-    dataFile = os.path.join(root,'bbcsport_2view.mat')
-    data = scio.loadmat(dataFile)
-    # 分离X1，X2，并且使其为数组
-    X_raw = data['X']
-    X1_raw = X_raw[0, 0]
-    X2_raw = X_raw[0, 1]
-    X1_raw = X1_raw.toarray()
-    X2_raw = X2_raw.toarray()
-    X1_raw = np.transpose(X1_raw)
-    X2_raw = np.transpose(X2_raw)
-    # 分离Y
-    Y_raw = data['gt']
-    # 合并成一个列表并且进行抽样，得出S1（算法训练集）和S2（算法测试集）（数组）
-    raw = np.hstack((X1_raw, X2_raw, Y_raw))
-    totalnum = round((raw.shape[0]) / 2)  # train len
-    X1_num = X1_raw.shape[1]
-    X2_num = X2_raw.shape[1]
-    raw = raw.tolist()
-    S1 = random.sample(raw, totalnum)
-    S2 = random.sample(raw, totalnum)
-    S1 = np.array(S1)
-    S2 = np.array(S2)
-    # train set
-    S1_X = S1[:, 0:X1_num + X2_num]
-    S1_Y = S1[:, X1_num + X2_num:]
-    # test set
-    S2_X = S2[:, 0:X1_num + X2_num]
-    S2_Y = S2[:, X1_num + X2_num:]
-
-    return S1_X,S1_Y,S2_X,S2_Y,totalnum
-
-
 def transformer_3Source():
     '''
     transformer of dataset: 3Source
@@ -268,4 +225,45 @@ def transformer_MSRC_v1():
     return S1_X, S1_Y, S2_X, S2_Y, totalnum
 
 
+def transformer_bbcsport_2():
+    '''
+    对bbcsport 2 view 数据集的loader & 转换
+    :param data: data['X'].shape = (dims, simple nums), data['gt'].shape = (1, simple nums)
+    :return:    S1_X    训练集 X，X是多个视图的stack，    S1_X.shape = (simple_nums, dims_total)
+                S1_Y    训练集 label ，                 S1_Y.shape = (simple_nums, 1)
+                S2_X    测试集 X
+                S2_Y    测试集 label
+                totalnum = round((raw.shape[0]) / 2)  # train len
+    '''
+
+    dataFile = os.path.join(root,'bbcsport_2view.mat')
+    data = scio.loadmat(dataFile)
+    # 分离X1，X2，并且使其为数组
+    X_raw = data['X']
+    X1_raw = X_raw[0, 0]
+    X2_raw = X_raw[0, 1]
+    X1_raw = X1_raw.toarray()
+    X2_raw = X2_raw.toarray()
+    X1_raw = np.transpose(X1_raw)
+    X2_raw = np.transpose(X2_raw)
+    # 分离Y
+    Y_raw = data['gt']
+    # 合并成一个列表并且进行抽样，得出S1（算法训练集）和S2（算法测试集）（数组）
+    raw = np.hstack((X1_raw, X2_raw, Y_raw))
+    totalnum = round((raw.shape[0]) / 2)  # train len
+    X1_num = X1_raw.shape[1]
+    X2_num = X2_raw.shape[1]
+    raw = raw.tolist()
+    S1 = random.sample(raw, totalnum)
+    S2 = random.sample(raw, totalnum)
+    S1 = np.array(S1)
+    S2 = np.array(S2)
+    # train set
+    S1_X = S1[:, 0:X1_num + X2_num]
+    S1_Y = S1[:, X1_num + X2_num:]
+    # test set
+    S2_X = S2[:, 0:X1_num + X2_num]
+    S2_Y = S2[:, X1_num + X2_num:]
+
+    return S1_X,S1_Y,S2_X,S2_Y,totalnum
 
